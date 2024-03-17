@@ -1,9 +1,6 @@
 #if UNITY_EDITOR
-using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using System;
-using System.Linq;
 
 namespace GameAudio
 {
