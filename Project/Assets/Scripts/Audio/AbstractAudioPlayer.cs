@@ -58,5 +58,19 @@ namespace GameAudio
                 audioSource.Stop();
             }
         }
+
+        protected void PlayClipOneShot(T clipKey, float volumeScale = 1.0f)
+        {
+            if (audioClips.TryGetValue(clipKey, out AudioClip clip))
+            {
+                audioSource.PlayOneShot(clip, volumeScale);
+            }
+#if UNITY_EDITOR
+            else
+            {
+                Debug.LogWarning($"Clip not found for one-shot play: {clipKey}");
+            }
+#endif
+        }
     }
 }
