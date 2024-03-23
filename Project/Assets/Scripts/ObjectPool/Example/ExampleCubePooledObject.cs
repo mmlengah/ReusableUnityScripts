@@ -6,16 +6,27 @@ public class ExampleCubePooledObject : AbstractPooledObject
 {
     private Rigidbody rb;
     private float enableTime;
+    private static bool collisionsDisabled = false; 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        DisableLayerCollisionsOnce();
     }
 
     private void OnEnable()
     {
         SetRandomPositionAndRotation();
         enableTime = Time.time;
+    }
+
+    private static void DisableLayerCollisionsOnce()
+    {
+        if (!collisionsDisabled)
+        {
+            Physics.IgnoreLayerCollision(4, 4, true); 
+            collisionsDisabled = true;
+        }
     }
 
     private void SetRandomPositionAndRotation()
@@ -36,7 +47,7 @@ public class ExampleCubePooledObject : AbstractPooledObject
             Random.Range(-rotationIntensity, rotationIntensity),
             Random.Range(-rotationIntensity, rotationIntensity)
         );
-        rb.angularVelocity = rotation * Mathf.Deg2Rad; 
+        rb.angularVelocity = rotation * Mathf.Deg2Rad;
     }
 
     private void Update()

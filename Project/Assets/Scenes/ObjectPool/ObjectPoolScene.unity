@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPool: {fileID: 15742797}
+  cubesPerFrame: 1
 --- !u!1 &937381630
 GameObject:
   m_ObjectHideFlags: 0

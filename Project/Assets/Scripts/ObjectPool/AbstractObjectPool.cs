@@ -5,14 +5,15 @@ public abstract class AbstractObjectPool : MonoBehaviour
 {
     [SerializeField] protected GameObject prefab;
     [SerializeField] protected Transform spawnLocation;
-
     private static Transform pooledObjectsContainer;
+
+    private int activeObjectCount = 0;
+    public int ActiveObjectCount => activeObjectCount;
 
     public ObjectPool<GameObject> Pool { get; private set; }
 
     protected abstract int DefaultCapacity { get; }
     protected abstract int MaxSize { get; }
-
     protected abstract bool CollectionCheck { get; }
 
     protected virtual void Awake()
@@ -42,7 +43,6 @@ public abstract class AbstractObjectPool : MonoBehaviour
     protected virtual GameObject CreatePooledObject()
     {
         GameObject obj = Instantiate(prefab, spawnLocation.position, spawnLocation.rotation);
-
         obj.transform.SetParent(pooledObjectsContainer, false);
 
         if (obj.TryGetComponent(out AbstractPooledObject poolObjectComponent))
@@ -51,22 +51,31 @@ public abstract class AbstractObjectPool : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("The instantiated object does not have an AbstractPoolObject component.");
+            Debug.LogWarning("The instantiated object does not have an AbstractPooledObject component.");
         }
 
+        activeObjectCount++;
         return obj;
     }
 
-    protected virtual void OnGetObject(GameObject obj) {
+    protected virtual void OnGetObject(GameObject obj)
+    {
         obj.transform.SetPositionAndRotation(spawnLocation.position, spawnLocation.rotation);
         obj.SetActive(true);
+
+        activeObjectCount++;
     }
 
-    protected virtual void OnReleaseObject(GameObject obj) {
+    protected virtual void OnReleaseObject(GameObject obj)
+    {
         obj.SetActive(false);
+
+        activeObjectCount--;
     }
 
-    protected virtual void OnDestroyObject(GameObject obj) {
+    protected virtual void OnDestroyObject(GameObject obj)
+    {
         Destroy(obj);
+        activeObjectCount--;
     }
 }
